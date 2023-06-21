@@ -84,6 +84,9 @@ target_link_options(
     -Wl,--wrap=sem_post
     -Wl,--wrap=sem_destroy
     -Wl,--wrap=sem_timedwait
+    -Wl,--wrap=eventfd
+    -Wl,--wrap=eventfd_read
+    -Wl,--wrap=eventfd_write
 )
 
 target_link_libraries(
