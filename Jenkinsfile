@@ -74,24 +74,24 @@ pipeline {
       steps {
         parallel(
           debug: {
-            gitlabCommitStatus("build debug") {
+            //gitlabCommitStatus("build debug") {
               withCredentials([string(credentialsId: 'gitlab-jenkins-user', variable: 'GITLAB_USER')]) {
                 sh '''#!/bin/bash -xe
                 env
                 ./ci/build.sh --ci Debug
                 '''
               }
-            }
+            //}
           },
           release: {
-            gitlabCommitStatus("build release") {
+            //gitlabCommitStatus("build release") {
               withCredentials([string(credentialsId: 'gitlab-jenkins-user', variable: 'GITLAB_USER')]) {
                 sh '''#!/bin/bash -xe
                 env
                 ./ci/build.sh --ci Release
                 '''
               }
-            }
+            //}
           }
         )
       }
