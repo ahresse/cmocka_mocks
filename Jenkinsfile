@@ -75,7 +75,8 @@ pipeline {
         parallel(
           debug: {
             //gitlabCommitStatus("build debug") {
-              withCredentials([string(credentialsId: 'gitlab-jenkins-user', variable: 'GITLAB_USER')]) {
+              //withCredentials([string(credentialsId: 'gitlab-jenkins-user', variable: 'GITLAB_USER')]) {
+              sshagent(credentials: ['jenkins-e2data']) {
                 sh '''#!/bin/bash -xe
                 env
                 ./ci/build.sh --ci Debug
@@ -85,7 +86,8 @@ pipeline {
           },
           release: {
             //gitlabCommitStatus("build release") {
-              withCredentials([string(credentialsId: 'gitlab-jenkins-user', variable: 'GITLAB_USER')]) {
+              //withCredentials([string(credentialsId: 'gitlab-jenkins-user', variable: 'GITLAB_USER')]) {
+              sshagent(credentials: ['jenkins-e2data']) {
                 sh '''#!/bin/bash -xe
                 env
                 ./ci/build.sh --ci Release
