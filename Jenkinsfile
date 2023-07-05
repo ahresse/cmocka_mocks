@@ -77,6 +77,7 @@ pipeline {
             gitlabCommitStatus("build debug") {
               withCredentials([string(credentialsId: 'gitlab-jenkins-user', variable: 'GITLAB_USER')]) {
                 sh '''#!/bin/bash -xe
+                env
                 ./ci/build.sh --ci Debug
                 '''
               }
