@@ -27,13 +27,13 @@ properties([gitLabConnection('GitLab')])
 
 pipeline {
   options {
-    gitlabBuilds(builds: ["cmocka_mocks", "cmocka_mocks: build debug", "cmocka_mocks: build release", "cmocka_mocks: lint sources", "cmocka_mocks: documentation"])
+    gitlabBuilds(builds: ["cmocka-mocks", "build debug", "build release", "lint sources", "documentation"])
     buildDiscarder(logRotator(numToKeepStr: env.BRANCH_NAME == "master"? "1000": env.BRANCH_NAME == "integration"?"1000":"3"))
   }
 
   agent {
     dockerfile {
-        filename './cmocka_mocks/ci/Dockerfile'
+        filename './ci/Dockerfile'
         reuseNode true
         additionalBuildArgs "--build-arg USER=jenkins \
                         --build-arg UID=\$(id -u) --build-arg GID=\$(id -g) --build-arg ASMCOV_URI=${ASMCOV_URI}"
@@ -49,7 +49,7 @@ pipeline {
         sh 'env'
         sh 'gcc --version'
         sh 'cmake --version'
-        updateGitlabCommitStatus name: 'cmocka_mocks', state: 'running'
+        updateGitlabCommitStatus name: 'cmocka-mocks', state: 'running'
       }
     }
 
@@ -57,16 +57,16 @@ pipeline {
       steps {
         parallel(
           debug: {
-            gitlabCommitStatus("cmocka_mocks: build debug") {
+            gitlabCommitStatus("build debug") {
               sh '''#!/bin/bash -xe
-                ./cmocka_mocks/ci/build.sh --ci Debug
+                ./ci/build.sh --ci Debug
               '''
             }
           },
           release: {
-            gitlabCommitStatus("cmocka_mocks: build release") {
+            gitlabCommitStatus("build release") {
               sh '''#!/bin/bash -xe
-                ./cmocka_mocks/ci/build.sh --ci Release
+                ./ci/build.sh --ci Release
               '''
             }
           }
@@ -76,29 +76,29 @@ pipeline {
 
     stage('Lint sources') {
       steps{
-        gitlabCommitStatus("cmocka_mocks: lint sources") {
+        gitlabCommitStatus("lint sources") {
           sh '''#!/bin/bash -xe
-            ./cmocka_mocks/ci/code_lint.py --ci
-            ./cmocka_mocks/ci/checklicense.sh
+            ./ci/code_lint.py --ci
+            ./ci/checklicense.sh
           '''
         }
       }
       post {
         always {
-          archiveArtifacts artifacts: "cmocka_mocks/build/Release/result/lint_results/**", fingerprint: true
+          archiveArtifacts artifacts: "build/Release/result/lint_results/**", fingerprint: true
         }
       }
     }
 
     stage('Build documentation') {
       steps{
-        gitlabCommitStatus("cmocka_mocks: documentation") {
-          sh './cmocka_mocks/ci/build_doc.sh'
+        gitlabCommitStatus("documentation") {
+          sh './ci/build_doc.sh'
         }
       }
       post {
         success {
-          archiveArtifacts artifacts: "cmocka_mocks/build/Debug/doc/**, documentation/monitor.md", fingerprint: true
+          archiveArtifacts artifacts: "build/Debug/doc/**, documentation/monitor.md", fingerprint: true
         }
       }
     }
@@ -134,15 +134,12 @@ pipeline {
       }
     }
     success {
-        updateGitlabCommitStatus name: 'cmocka_mocks', state: 'success'
+        updateGitlabCommitStatus name: 'cmocka-mocks', state: 'success'
     }
     failure {
-        updateGitlabCommitStatus name: 'cmocka_mocks', state: 'failed'
+        updateGitlabCommitStatus name: 'cmocka-mocks', state: 'failed'
     }
     always {
-      withCredentials([usernamePassword(credentialsId: 'kpi_creds', passwordVariable: 'KPI_API_TOKEN', usernameVariable: 'KPI_API_URL')]) {
-        sh './cmocka_mocks/ci/publish_kpis.sh'
-      }
       cleanWs(cleanWhenNotBuilt: false,
           deleteDirs: true,
           disableDeferredWipeout: true,

@@ -3,9 +3,9 @@ set -e -u
 
 CMD_PATH=$(realpath $(dirname $0))
 BASE_DIR=${CMD_PATH%/*}
-REPO_ROOT_DIR="$BASE_DIR/.."
 CMAKE_PARAM=${CMAKE_PARAM:-""}
 NINJA_PARAM=${NINJA_PARAM:-"-j$(nproc)"}
+DEPENDENCY_DIR="$BASE_DIR/build/dependency"
 
 PARAM=""
 OPTION_CI=0
@@ -64,10 +64,25 @@ if [ $OPTION_VERBOSE -eq 1 ]; then
     NINJA_PARAM="$NINJA_PARAM -v"
 fi
 
-DEPENDENCIES="cmocka_extensions"
-for dependency in $DEPENDENCIES; do
+#DEPENDENCIES="cmocka_extensions"
+DEPENDENCIES="cmocka_extensions;git@gitlabintern.emlix.com:elektrobit/base-os/cmocka-extensions.git"
+if [ ! -z $DEPENDENCIES ] && [ ! -d $DEPENDENCY_DIR ]; then
+    mkdir -p $DEPENDENCY_DIR
+fi
+if [ ! -z $DEPENDENCIES ]; then
+    echo "getting dependencies..."
+fi
+for dep in $DEPENDENCIES; do
+    repo=${dep#*;}
+    repo_dir=$(basename ${repo%.git})
+    dependency=$(basename ${dep%;*})
+    if [ -d "$DEPENDENCY_DIR/${repo_dir}" ]; then
+        git -C "$DEPENDENCY_DIR/${repo_dir}" pull
+    else
+        git -C $DEPENDENCY_DIR clone ${repo}
+    fi
     declare -x ${dependency}_DIR="$LOCAL_INSTALL_DIR/usr/local/lib/cmake/${dependency}"
-    $REPO_ROOT_DIR/${dependency}/ci/build.sh $BUILD_TYPE $DEP_BUILD_PARAM
+    $DEPENDENCY_DIR/${repo_dir}/ci/build.sh $BUILD_TYPE $DEP_BUILD_PARAM
 done
 
 echo -e "\n#### Building $(basename $BASE_DIR) ($BUILD_TYPE) ####"
@@ -81,6 +96,6 @@ ninja -C $CMAKE_BUILD_DIR $NINJA_PARAM all install 2>&1 | tee $RESULT_DIR/build_
 
 re=${PIPESTATUS[0]}
 
-$REPO_ROOT_DIR/shared/ci/check_build_log.py $RESULT_DIR/build_log.txt
+$BASE_DIR/ci/check_build_log.py $RESULT_DIR/build_log.txt
 
 exit $re
