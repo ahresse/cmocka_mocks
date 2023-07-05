@@ -22,6 +22,23 @@ node {
       }
     }
 }
+/*node {
+  ASMCOV_URI = ''
+    script {
+      def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
+          com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl.class,
+          Jenkins.instance,
+          null,
+          null
+          );
+      def jenkins_asmcov_uri = creds.findResult { it.id == 'jenkins_asmcov_uri' ? it : null }                                                           
+      if(jenkins_asmcov_uri) {
+        println(jenkins_asmcov_uri.id + ": " +jenkins_asmcov_uri.username + ": " + jenkins_asmcov_uri.password)
+          ASMCOV_URI=jenkins_asmcov_uri.password
+      }
+      println("stages:" + stages())
+    }
+}*/
 
 properties([gitLabConnection('GitLab')])
 
