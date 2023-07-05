@@ -85,9 +85,12 @@ pipeline {
           },
           release: {
             gitlabCommitStatus("build release") {
-              sh '''#!/bin/bash -xe
+              withCredentials([string(credentialsId: 'gitlab-jenkins-user', variable: 'GITLAB_USER')]) {
+                sh '''#!/bin/bash -xe
+                env
                 ./ci/build.sh --ci Release
-              '''
+                '''
+              }
             }
           }
         )
