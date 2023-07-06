@@ -32,7 +32,7 @@ node {
       null,
       null
     );
-    def gitlab_user = creds.findResult { it.id ==  'gitlab-jenkins-user'? it : null }                                                           
+    def gitlab_user = creds.findResult { it.id ==  'gitlab-jenkins-user-password'? it : null }
     if(gitlab_user) {
       println(gitlab_user.id + ": " +gitlab_user.username + ": " + gitlab_user.password)
       GITLAB_USER = gitlab_user.username + ":" + gitlab_user.password
