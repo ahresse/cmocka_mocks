@@ -64,10 +64,12 @@ if [ $OPTION_VERBOSE -eq 1 ]; then
     NINJA_PARAM="$NINJA_PARAM -v"
 fi
 
-echo "Gitlab User: ${GITLAB_USER}"
-#DEPENDENCIES="cmocka_extensions"
-DEPENDENCIES="cmocka_extensions;https://$GITLAB_USER@gitlabintern.emlix.com/elektrobit/base-os/cmocka-extensions.git"
-#DEPENDENCIES="cmocka_extensions;git@gitlabintern.emlix.com:elektrobit/base-os/cmocka-extensions.git"
+if [ ! -z ${CI+x} ]; then
+    echo "Gitlab User: ${GITLAB_USER}"
+    DEPENDENCIES="cmocka_extensions;https://$GITLAB_USER@gitlabintern.emlix.com/elektrobit/base-os/cmocka-extensions.git"
+else
+    DEPENDENCIES="cmocka_extensions;git@gitlabintern.emlix.com:elektrobit/base-os/cmocka-extensions.git"
+fi
 if [ ! -z $DEPENDENCIES ] && [ ! -d $DEPENDENCY_DIR ]; then
     mkdir -p $DEPENDENCY_DIR
 fi
