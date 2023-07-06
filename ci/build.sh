@@ -86,9 +86,12 @@ for dep in $DEPENDENCIES; do
     #fi
     git -C $DEPENDENCY_DIR clone ${repo}
     if [ -d "$DEPENDENCY_DIR/${repo_dir}" ]; then
-        echo "already cheacked out!"
+        echo "${dependency} already cheacked out!"
+        echo "git -C $DEPENDENCY_DIR/${repo_dir} pull"
         git -C "$DEPENDENCY_DIR/${repo_dir}" pull
     else
+        echo "checking out ${dependency}!"
+        echo "git -C $DEPENDENCY_DIR clone ${repo}"
         git -C $DEPENDENCY_DIR clone ${repo}
     fi
     declare -x ${dependency}_DIR="$LOCAL_INSTALL_DIR/usr/local/lib/cmake/${dependency}"
