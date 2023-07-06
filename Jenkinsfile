@@ -100,7 +100,7 @@ pipeline {
       steps{
         gitlabCommitStatus("lint sources") {
           sh '''#!/bin/bash -xe
-            ./ci/code_lint.py --ci
+            ./ci/code_lint.py --ci --result-dir=build/Release/result/lint_results
             ./ci/checklicense.sh
           '''
         }
