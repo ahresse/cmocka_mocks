@@ -84,12 +84,12 @@ for dep in $DEPENDENCIES; do
     if [ ! -d "$DEPENDENCY_DIR/${repo_dir}" ]; then
         rm -rf "$DEPENDENCY_DIR/${repo_dir}"
     fi
-    git -C "$DEPENDENCY_DIR/${repo_dir}" pull
+    git -C $DEPENDENCY_DIR clone ${repo}
     #if [ -d "$DEPENDENCY_DIR/${repo_dir}" ]; then
+    #    echo "already cheacked out!"
     #    git -C "$DEPENDENCY_DIR/${repo_dir}" pull
     #else
-    #    echo "already cheacked out!"
-    #    #git -C $DEPENDENCY_DIR clone ${repo}
+    #    git -C $DEPENDENCY_DIR clone ${repo}
     #fi
     declare -x ${dependency}_DIR="$LOCAL_INSTALL_DIR/usr/local/lib/cmake/${dependency}"
     $DEPENDENCY_DIR/${repo_dir}/ci/build.sh $BUILD_TYPE $DEP_BUILD_PARAM
