@@ -54,9 +54,8 @@ pipeline {
         reuseNode true
         additionalBuildArgs "--build-arg USER=jenkins \
                         --build-arg UID=\$(id -u) --build-arg GID=\$(id -g) \
-                        --build-arg ASMCOV_URI=${ASMCOV_URI} \
-                        -e GITLAB_USER=${GITLAB_USER}"
-        args '--privileged --userns=keep-id'
+                        --build-arg ASMCOV_URI=${ASMCOV_URI}"
+        args '--privileged --userns=keep-id -e GITLAB_USER=${GITLAB_USER}'
         label "podman"
     }
   }
