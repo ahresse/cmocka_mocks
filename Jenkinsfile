@@ -4,6 +4,7 @@ import hudson.*
 import hudson.model.*
 
 def ASMCOV_URI
+def GITLAB_USER
 
 node {
     ASMCOV_URI = ''
@@ -52,7 +53,9 @@ pipeline {
         filename './ci/Dockerfile'
         reuseNode true
         additionalBuildArgs "--build-arg USER=jenkins \
-                        --build-arg UID=\$(id -u) --build-arg GID=\$(id -g) --build-arg ASMCOV_URI=${ASMCOV_URI}"
+                        --build-arg UID=\$(id -u) --build-arg GID=\$(id -g) \
+                        --build-arg ASMCOV_URI=${ASMCOV_URI} \
+                        -e GITLAB_USER=${GITLAB_USER}"
         args '--privileged --userns=keep-id'
         label "podman"
     }
