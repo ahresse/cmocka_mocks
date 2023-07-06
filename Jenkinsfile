@@ -27,15 +27,17 @@ node {
   GITLAB_USER = ''
   script {
     def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
-        com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl.class,
-        Jenkins.instance,
-        null,
-        null
-        );
+      com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl.class,
+      Jenkins.instance,
+      null,
+      null
+    );
     def gitlab_user = creds.findResult { it.id ==  'gitlab-jenkins-user'? it : null }                                                           
     if(gitlab_user) {
       println(gitlab_user.id + ": " +gitlab_user.username + ": " + gitlab_user.password)
-        GITLAB_USER = gitlab_user.username + ":" + gitlab_user.password
+      GITLAB_USER = gitlab_user.username + ":" + gitlab_user.password
+    } else {
+      println("No Gitlab-Jenkins-User found!!!!!")
     }
   }
 }
