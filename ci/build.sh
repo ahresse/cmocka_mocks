@@ -66,7 +66,7 @@ fi
 
 echo "Gitlab User: ${GITLAB_USER}"
 #DEPENDENCIES="cmocka_extensions"
-DEPENDENCIES="cmocka_extensions;$GITLAB_USER@gitlabintern.emlix.com:elektrobit/base-os/cmocka-extensions.git"
+DEPENDENCIES="cmocka_extensions;https://$GITLAB_USER@gitlabintern.emlix.com:elektrobit/base-os/cmocka-extensions.git"
 #DEPENDENCIES="cmocka_extensions;git@gitlabintern.emlix.com:elektrobit/base-os/cmocka-extensions.git"
 if [ ! -z $DEPENDENCIES ] && [ ! -d $DEPENDENCY_DIR ]; then
     mkdir -p $DEPENDENCY_DIR
@@ -75,6 +75,7 @@ if [ ! -z $DEPENDENCIES ]; then
     echo "getting dependencies..."
 fi
 for dep in $DEPENDENCIES; do
+    echo "-> ${dep}"
     repo=${dep#*;}
     repo_dir=$(basename ${repo%.git})
     dependency=$(basename ${dep%;*})
