@@ -659,9 +659,8 @@ def main():
               " Perhaps try --select-json or --select-all? (see --help)")
         sys.exit(os.EX_NOINPUT)
 
-    if not cfg["ci"]:
-        if "check_tidy" in cfg["steps"] or "fix_tidy" in cfg["steps"]:
-            prepare_compile_commands(cfg)
+    if "check_tidy" in cfg["steps"] or "fix_tidy" in cfg["steps"]:
+        prepare_compile_commands(cfg)
 
     result = execute_steps(cfg, source_set)
     sys.exit(result)
