@@ -22,23 +22,22 @@ node {
       }
     }
 }
-/*node {
-  ASMCOV_URI = ''
-    script {
-      def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
-          com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl.class,
-          Jenkins.instance,
-          null,
-          null
-          );
-      def jenkins_asmcov_uri = creds.findResult { it.id == 'jenkins_asmcov_uri' ? it : null }                                                           
-      if(jenkins_asmcov_uri) {
-        println(jenkins_asmcov_uri.id + ": " +jenkins_asmcov_uri.username + ": " + jenkins_asmcov_uri.password)
-          ASMCOV_URI=jenkins_asmcov_uri.password
-      }
-      println("stages:" + stages())
+node {
+  GITLAB_USER = ''
+  script {
+    def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
+        com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl.class,
+        Jenkins.instance,
+        null,
+        null
+        );
+    def gitlab_user = creds.findResult { it.id ==  'gitlab-jenkins-user'? it : null }                                                           
+    if(gitlab_user) {
+      println(gitlab_user.id + ": " +gitlab_user.username + ": " + gitlab_user.password)
+        GITLAB_USER = gitlab_user.username + ":" + gitlab_user.password
     }
-}*/
+  }
+}
 
 properties([gitLabConnection('GitLab')])
 
@@ -74,26 +73,20 @@ pipeline {
       steps {
         parallel(
           debug: {
-            //gitlabCommitStatus("build debug") {
-              //withCredentials([string(credentialsId: 'gitlab-jenkins-user', variable: 'GITLAB_USER')]) {
-              sshagent(credentials: ['jenkins-e2data']) {
-                sh '''#!/bin/bash -xe
-                env
-                ./ci/build.sh --ci Debug
-                '''
-              }
-            //}
+            gitlabCommitStatus("build debug") {
+              sh '''#!/bin/bash -xe
+              env
+              ./ci/build.sh --ci Debug
+              '''
+            }
           },
           release: {
-            //gitlabCommitStatus("build release") {
-              //withCredentials([string(credentialsId: 'gitlab-jenkins-user', variable: 'GITLAB_USER')]) {
-              sshagent(credentials: ['jenkins-e2data']) {
-                sh '''#!/bin/bash -xe
-                env
+            gitlabCommitStatus("build release") {
+              sh '''#!/bin/bash -xe
+              env
                 ./ci/build.sh --ci Release
-                '''
-              }
-            //}
+              '''
+            }
           }
         )
       }
