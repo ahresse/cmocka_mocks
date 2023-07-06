@@ -81,10 +81,6 @@ for dep in $DEPENDENCIES; do
     repo=${dep#*;}
     repo_dir=$(basename ${repo%.git})
     dependency=$(basename ${dep%;*})
-    #if [ -d "$DEPENDENCY_DIR/${repo_dir}" ]; then
-    #    rm -rf "$DEPENDENCY_DIR/${repo_dir}"
-    #fi
-    #git -C $DEPENDENCY_DIR clone ${repo}
     if [ -d "$DEPENDENCY_DIR/${repo_dir}" ]; then
         echo "${dependency} already cheacked out!"
         echo "git -C $DEPENDENCY_DIR/${repo_dir} pull"
