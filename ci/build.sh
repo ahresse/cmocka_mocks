@@ -84,7 +84,8 @@ for dep in $DEPENDENCIES; do
     if [ -d "$DEPENDENCY_DIR/${repo_dir}" ]; then
         echo "${dependency} already cheacked out!"
         echo "git -C $DEPENDENCY_DIR/${repo_dir} pull"
-        git -C "$DEPENDENCY_DIR/${repo_dir}" pull
+        git -C "$DEPENDENCY_DIR/${repo_dir}" fetch --all
+        git -C "$DEPENDENCY_DIR/${repo_dir}" reset --hard origin/integration
     else
         echo "checking out ${dependency}!"
         echo "git -C $DEPENDENCY_DIR clone ${repo}"
