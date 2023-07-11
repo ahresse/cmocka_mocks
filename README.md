@@ -16,7 +16,7 @@ make -C ./build install
 or use the CI hooks
 
 ```bash
-./cmocka_mocks/ci/build.sh [Release]
+./ci/build.sh [Release]
 ```
 
 ## Folders
@@ -30,7 +30,7 @@ Scripts to be used by CI pipelines to build , run various tests and checks.
 A more detailed description of the mocked functions can be found in the documentation.
 
 ```
-./cmocka_mocks/documentation/documentation.md
+./documentation/documentation.md
 ```
 
 ### src
