@@ -183,6 +183,21 @@ def collect_sources_ignored(cfg):
     return ignored_set
 
 
+def collect_sources_intentional_unused(cfg):
+    """
+    Collect sources that are not used
+    but shouldn't be ignored
+    """
+    unused_list = [
+        glob.glob(x) for x in get_env("UNUSED_SOURCES", "").split(" ")
+        if len(x) > 1
+    ]
+    unused_set = {
+        os.path.abspath(x) for x in flatten_list(unused_list)
+    }
+    return unused_set
+
+
 def collect_sources(cfg):
     """
     Collects all sources necessary for testing
@@ -221,6 +236,7 @@ def collect_sources(cfg):
         source_set["all"] = collect_sources_all(folders)
         source_set["all"] -= ignored_set
 
+    source_set["intentional_unused"] = collect_sources_intentional_unused(cfg)
     source_set["default"] = source_set[cfg["collect_mode"]]
 
     step_tidy = sum([True for x in cfg["steps"] if x.endswith("tidy")])
@@ -254,6 +270,8 @@ def check_unused(cfg, source_set):
     with open(log_file, 'w', encoding='utf-8') as log_fh:
         log_line(log_fh, "check_unused: Searching for unused files...")
         source_set_diff = source_set["all"].difference(source_set["used"])
+        not_actualy_unused = source_set["used"].intersection(source_set["intentional_unused"])
+        source_set_diff -= source_set["intentional_unused"]
         unused_file_count = len(source_set_diff)
 
         if unused_file_count > 0:
@@ -263,6 +281,16 @@ def check_unused(cfg, source_set):
             log_line(log_fh, "")
             result = os.EX_DATAERR
             state = "FAILED"
+        if len(source_set["intentional_unused"]) > 0:
+            print("Intentional unused files:")
+            for source in sorted(source_set["intentional_unused"]):
+                print(f"        {source}")
+            print("")
+        if len(not_actualy_unused) > 0:
+            print("Not actually unused files:")
+            for source in sorted(not_actualy_unused):
+                print(f"        {source}")
+            print("")
 
         log_line(log_fh, f"check_unused: TEST {state}; " +
                  f"Found {unused_file_count} unused files!")
@@ -546,7 +574,7 @@ def parameter_process(args, cfg):
     """
     if args.ci:
         cfg["ci"] = True
-        cfg["collect_mode"] = "used"
+        cfg["collect_mode"] = "all"
     else:
         cfg["ci"] = False
         mode = {0: "diff", 1: "all", 2: "diff", 4: "used"}
