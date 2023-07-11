@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.21)
-include(project.cmake)
+include(cmake/project.cmake)
 
 project(cmocka_mocks LANGUAGES C VERSION ${ELOS_VERSION})
 
@@ -16,5 +16,5 @@ project_add_documentation_target(
 add_subdirectory(src)
 
 if(PACKAGING)
-  include(Packing.cmake)
+  include(cmake/Packing.cmake)
 endif(PACKAGING)
