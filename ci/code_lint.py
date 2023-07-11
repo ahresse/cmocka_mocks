@@ -270,7 +270,8 @@ def check_unused(cfg, source_set):
     with open(log_file, 'w', encoding='utf-8') as log_fh:
         log_line(log_fh, "check_unused: Searching for unused files...")
         source_set_diff = source_set["all"].difference(source_set["used"])
-        not_actualy_unused = source_set["used"].intersection(source_set["intentional_unused"])
+        not_actualy_unused = source_set["used"].intersection(
+            source_set["intentional_unused"])
         source_set_diff -= source_set["intentional_unused"]
         unused_file_count = len(source_set_diff)
 
