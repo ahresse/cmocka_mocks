@@ -269,15 +269,15 @@ def check_unused(cfg, source_set):
 
     with open(log_file, 'w', encoding='utf-8') as log_fh:
         log_line(log_fh, "check_unused: Searching for unused files...")
-        source_set_diff = source_set["all"].difference(source_set["used"])
-        not_actualy_unused = source_set["used"].intersection(
+        source_set_unused = source_set["all"].difference(source_set["used"])
+        source_set_known_unused = source_set["used"].intersection(
             source_set["intentional_unused"])
-        source_set_diff -= source_set["intentional_unused"]
-        unused_file_count = len(source_set_diff)
+        source_set_unused -= source_set["intentional_unused"]
+        unused_file_count = len(source_set_unused)
 
         if unused_file_count > 0:
             log_line(log_fh, "Unused files:")
-            for file in sorted(list(source_set_diff)):
+            for file in sorted(list(source_set_unused)):
                 log_line(log_fh, "        " + file)
             log_line(log_fh, "")
             result = os.EX_DATAERR
@@ -287,9 +287,9 @@ def check_unused(cfg, source_set):
             for source in sorted(source_set["intentional_unused"]):
                 print(f"        {source}")
             print("")
-        if len(not_actualy_unused) > 0:
-            print("Not actually unused files:")
-            for source in sorted(not_actualy_unused):
+        if len(source_set_known_unused) > 0:
+            print("Known unused files:")
+            for source in sorted(source_set_known_unused):
                 print(f"        {source}")
             print("")
 
@@ -404,12 +404,12 @@ def fix_unused(cfg, source_set):
     """
     del cfg
     result = os.EX_OK
-    source_set_diff = source_set["all"].difference(source_set["used"])
-    unused_file_count = len(source_set_diff)
+    source_set_unused = source_set["all"].difference(source_set["used"])
+    unused_file_count = len(source_set_unused)
 
     if unused_file_count > 0:
         print("fix_unused: Removing files...")
-        for file in sorted(list(source_set_diff)):
+        for file in sorted(list(source_set_unused)):
             print("    " + file)
             os.unlink(file)
         print()
