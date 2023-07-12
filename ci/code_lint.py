@@ -270,28 +270,32 @@ def check_unused(cfg, source_set):
     with open(log_file, 'w', encoding='utf-8') as log_fh:
         log_line(log_fh, "check_unused: Searching for unused files...")
         source_set_unused = source_set["all"].difference(source_set["used"])
-        source_set_known_unused = source_set["used"].intersection(
+        source_set_known_unused = source_set_unused.intersection(
             source_set["intentional_unused"])
         source_set_unused -= source_set["intentional_unused"]
         unused_file_count = len(source_set_unused)
+        should_be_unused = source_set["used"].intersection(
+            source_set["intentional_unused"])
 
         if unused_file_count > 0:
-            log_line(log_fh, "Unused files:")
+            log_line(log_fh, "Unused sources:")
             for file in sorted(list(source_set_unused)):
                 log_line(log_fh, "        " + file)
             log_line(log_fh, "")
             result = os.EX_DATAERR
             state = "FAILED"
-        if len(source_set["intentional_unused"]) > 0:
-            print("Intentional unused files:")
-            for source in sorted(source_set["intentional_unused"]):
-                print(f"        {source}")
-            print("")
         if len(source_set_known_unused) > 0:
-            print("Known unused files:")
+            print("Known and exepted unused sources:")
             for source in sorted(source_set_known_unused):
                 print(f"        {source}")
             print("")
+        if len(should_be_unused) > 0:
+            print("Specified as not used sources that are in use:")
+            for source in sorted(should_be_unused):
+                print(f"        {source}")
+            print("")
+            result = os.EX_DATAERR
+            state = "FAILED"
 
         log_line(log_fh, f"check_unused: TEST {state}; " +
                  f"Found {unused_file_count} unused files!")
