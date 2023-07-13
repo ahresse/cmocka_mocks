@@ -167,20 +167,38 @@ def collect_sources_diff(base_dir, target_branch):
     return source_set
 
 
+def collect_sources_list_from_env(env_var, no_match_msg="Globs that don't match anything:"):
+    """
+    Collect a list of sources from a list of globs in an enviroment variable.
+    And print all the globs not matching any files.
+    """
+    source_list = []
+    not_necessary = []
+    for x in get_env(env_var, "").split(" "):
+        if len(x) <= 1:
+            continue
+        paths = glob.glob(x)
+        if len(paths) == 0:
+            not_necessary.append(x)
+        else:
+            source_list.append(paths)
+    source_set = {
+        os.path.abspath(x) for x in flatten_list(source_list)
+    }
+    if len(not_necessary) != 0:
+        print(no_match_msg)
+        for x in sorted(not_necessary):
+            print(f"  {x}")
+        print("")
+
+    return source_set
+
+
 def collect_sources_ignored(cfg):
     """
     Collects ignored sources
     """
-
-    ignored_list = [
-        glob.glob(x) for x in get_env("IGNORE_SOURCES", "").split(" ")
-        if len(x) > 1
-    ]
-    ignored_set = {
-        os.path.abspath(x) for x in flatten_list(ignored_list)
-    }
-
-    return ignored_set
+    return collect_sources_list_from_env("IGNORE_SOURCES", "Not existing IGNORE_SOURCES globs:")
 
 
 def collect_sources_intentional_unused(cfg):
@@ -188,14 +206,7 @@ def collect_sources_intentional_unused(cfg):
     Collect sources that are not used
     but shouldn't be ignored
     """
-    unused_list = [
-        glob.glob(x) for x in get_env("UNUSED_SOURCES", "").split(" ")
-        if len(x) > 1
-    ]
-    unused_set = {
-        os.path.abspath(x) for x in flatten_list(unused_list)
-    }
-    return unused_set
+    return collect_sources_list_from_env("UNUSED_SOURCES", "UNUSED_SOURCES globs not matcing anything:")
 
 
 def collect_sources(cfg):
@@ -236,7 +247,8 @@ def collect_sources(cfg):
         source_set["all"] = collect_sources_all(folders)
         source_set["all"] -= ignored_set
 
-    source_set["intentionally_unused"] = collect_sources_intentional_unused(cfg)
+    source_set["intentionally_unused"] = collect_sources_intentional_unused(
+        cfg)
     source_set["default"] = source_set[cfg["collect_mode"]]
 
     step_tidy = sum([True for x in cfg["steps"] if x.endswith("tidy")])
