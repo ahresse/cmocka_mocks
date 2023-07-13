@@ -236,7 +236,7 @@ def collect_sources(cfg):
         source_set["all"] = collect_sources_all(folders)
         source_set["all"] -= ignored_set
 
-    source_set["intentional_unused"] = collect_sources_intentional_unused(cfg)
+    source_set["intentionally_unused"] = collect_sources_intentional_unused(cfg)
     source_set["default"] = source_set[cfg["collect_mode"]]
 
     step_tidy = sum([True for x in cfg["steps"] if x.endswith("tidy")])
@@ -271,11 +271,11 @@ def check_unused(cfg, source_set):
         log_line(log_fh, "check_unused: Searching for unused files...")
         source_set_unused = source_set["all"].difference(source_set["used"])
         source_set_known_unused = source_set_unused.intersection(
-            source_set["intentional_unused"])
-        source_set_unused -= source_set["intentional_unused"]
+            source_set["intentionally_unused"])
+        source_set_unused -= source_set["intentionally_unused"]
         unused_file_count = len(source_set_unused)
         should_be_unused = source_set["used"].intersection(
-            source_set["intentional_unused"])
+            source_set["intentionally_unused"])
 
         if unused_file_count > 0:
             log_line(log_fh, "Unused sources:")
@@ -285,7 +285,7 @@ def check_unused(cfg, source_set):
             result = os.EX_DATAERR
             state = "FAILED"
         if len(source_set_known_unused) > 0:
-            print("Known and exepted unused sources:")
+            print("Known and expected unused sources:")
             for source in sorted(source_set_known_unused):
                 print(f"        {source}")
             print("")
