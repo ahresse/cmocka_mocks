@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e -u
 
-CMD_PATH=$(realpath $(dirname $0))
+CMD_PATH=$(realpath "$(dirname "$0")")
 BASE_DIR=${CMD_PATH%/*}
 CMAKE_PARAM=${CMAKE_PARAM:-""}
 NINJA_PARAM=${NINJA_PARAM:-"-j$(nproc)"}
@@ -54,9 +54,9 @@ export LOCAL_INSTALL_DIR=${LOCAL_INSTALL_DIR:-"$DIST_DIR"}
 DEP_BUILD_PARAM=""
 if [ $OPTION_CLEAN -eq 1 ]; then
     DEP_BUILD_PARAM="$DEP_BUILD_PARAM -c"
-    if [ -e $BUILD_DIR ]; then
+    if [ -e "$BUILD_DIR" ]; then
         echo "Removing $BUILD_DIR ..."
-        rm -rf $BUILD_DIR
+        rm -rf "$BUILD_DIR"
     fi
 fi
 if [ $OPTION_VERBOSE -eq 1 ]; then
@@ -64,23 +64,23 @@ if [ $OPTION_VERBOSE -eq 1 ]; then
     NINJA_PARAM="$NINJA_PARAM -v"
 fi
 
-if [ ! -z ${CI+x} ]; then
+if [[ -n ${CI+x} ]]; then
     echo "Gitlab User: ${GITLAB_USER}"
     DEPENDENCIES="cmocka_extensions;https://$GITLAB_USER@gitlabintern.emlix.com/elektrobit/base-os/cmocka-extensions.git"
 else
     DEPENDENCIES="cmocka_extensions;git@gitlabintern.emlix.com:elektrobit/base-os/cmocka-extensions.git"
 fi
-if [ ! -z $DEPENDENCIES ] && [ ! -d $DEPENDENCY_DIR ]; then
-    mkdir -p $DEPENDENCY_DIR
+if [[ -n $DEPENDENCIES ]] && [ ! -d "$DEPENDENCY_DIR" ]; then
+    mkdir -p "$DEPENDENCY_DIR"
 fi
-if [ ! -z $DEPENDENCIES ]; then
+if [[ -n "$DEPENDENCIES" ]]; then
     echo "getting dependencies..."
 fi
 for dep in $DEPENDENCIES; do
     echo "-> ${dep}"
     repo=${dep#*;}
-    repo_dir=$(basename ${repo%.git})
-    dependency=$(basename ${dep%;*})
+    repo_dir=$(basename "${repo%.git}")
+    dependency=$(basename "${dep%;*}")
     if [ -d "$DEPENDENCY_DIR/${repo_dir}" ]; then
         echo "${dependency} already cheacked out!"
         echo "git -C $DEPENDENCY_DIR/${repo_dir} pull"
@@ -89,23 +89,23 @@ for dep in $DEPENDENCIES; do
     else
         echo "checking out ${dependency}!"
         echo "git -C $DEPENDENCY_DIR clone ${repo}"
-        git -C $DEPENDENCY_DIR clone ${repo}
+        git -C "$DEPENDENCY_DIR" clone "${repo}"
     fi
     declare -x ${dependency}_DIR="$LOCAL_INSTALL_DIR/usr/local/lib/cmake/${dependency}"
-    $DEPENDENCY_DIR/${repo_dir}/ci/build.sh $BUILD_TYPE $DEP_BUILD_PARAM
+    "$DEPENDENCY_DIR/${repo_dir}/ci/build.sh" $BUILD_TYPE $DEP_BUILD_PARAM
 done
 
-echo -e "\n#### Building $(basename $BASE_DIR) ($BUILD_TYPE) ####"
-mkdir -p $RESULT_DIR $DIST_DIR
-if [ ! -e $CMAKE_BUILD_DIR/build.ninja ]; then
-    cmake -B $CMAKE_BUILD_DIR $BASE_DIR -DCMAKE_BUILD_TYPE=$BUILD_TYPE -G Ninja $CMAKE_PARAM
+echo -e "\n#### Building $(basename "$BASE_DIR") ($BUILD_TYPE) ####"
+mkdir -p "$RESULT_DIR" "$DIST_DIR"
+if [ ! -e "$CMAKE_BUILD_DIR/build.ninja" ]; then
+    cmake -B "$CMAKE_BUILD_DIR" "$BASE_DIR" -DCMAKE_BUILD_TYPE=$BUILD_TYPE -G Ninja $CMAKE_PARAM
 fi
 
 DESTDIR="$LOCAL_INSTALL_DIR" \
-ninja -C $CMAKE_BUILD_DIR $NINJA_PARAM all install 2>&1 | tee $RESULT_DIR/build_log.txt
+ninja -C "$CMAKE_BUILD_DIR" $NINJA_PARAM all install 2>&1 | tee "$RESULT_DIR/build_log.txt"
 
 re=${PIPESTATUS[0]}
 
-$BASE_DIR/ci/check_build_log.py $RESULT_DIR/build_log.txt
+"$BASE_DIR/ci/check_build_log.py" "$RESULT_DIR/build_log.txt"
 
-exit $re
+exit "$re"
