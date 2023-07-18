@@ -3,7 +3,7 @@
 # these are cache variables, so they could be overwritten with -D,
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 # which is useful in case of packing only selected components instead of the whole thing
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Cmocka Mocks for elos, safu and samconf")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Cmocka Mocks used in elos, safu and samconf")
 
 set(CPACK_PACKAGE_VENDOR "emlix")
 

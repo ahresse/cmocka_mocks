@@ -631,7 +631,7 @@ def parameter_parse():
         "--ci", action="store_true",
         help="Special mode intended for use in " +
         "continuous integration, uses all tests and " +
-        "./elos/build/Release as build-dir per default.")
+        "./build/Release as build-dir per default.")
 
     grp_select = parser.add_mutually_exclusive_group(required=False)
     grp_select.add_argument(
@@ -647,14 +647,14 @@ def parameter_parse():
         help="Selects all sources in src and test")
 
     parser.add_argument(
-        "--base-dir", help="Base directory (e.g. ./elos) to use; " +
+        "--base-dir", help="Base directory (e.g. ./) to use; " +
         "Can also be set with 'export BASE_DIR'")
     parser.add_argument(
-        "--build-dir", help="Build directory (e.g. ./elos/build) to use; " +
+        "--build-dir", help="Build directory (e.g. ./build) to use; " +
         "Can also be set with 'export BUILD_DIR'")
     parser.add_argument(
         "--result-dir", help="Result directory " +
-        "(e.g. ./elos/build/lint_result) to use; " +
+        "(e.g. ./build/lint_result) to use; " +
         "Can also be set with 'export LINT_RESULT_DIR'")
 
     args = parser.parse_args()
