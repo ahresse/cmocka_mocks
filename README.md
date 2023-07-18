@@ -19,6 +19,23 @@ or use the CI hooks
 ./ci/build.sh [Release]
 ```
 
+### Workspace setup
+
+1. Please run the following git commands after cloning the repository:
+
+   ```bash
+   git config core.hooksPath .githooks
+   ```
+
+   to set the commit message template and to setup the project specific git hooks.
+
+2. Usually it is a good idea to create a symlink to the compilation database
+   created by cmake in the build directory. Run therefore:
+
+   ```
+   ln -s build/compile_commands.json
+   ```
+
 ## Folders
 
 ### ci
