@@ -50,6 +50,10 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: env.BRANCH_NAME == "master"? "1000": env.BRANCH_NAME == "integration"?"1000":"3"))
   }
 
+  parameters {
+    string(name: 'CMOCKA_EXTENSIONS_URI', defaultValue: 'https://github.com/Elektrobit/cmocka_mocks', description: 'Source URI to clone cmocka_extensions project')
+  }
+
   agent {
     dockerfile {
         filename './ci/Dockerfile'
@@ -80,6 +84,7 @@ pipeline {
             gitlabCommitStatus("build debug") {
               sh '''#!/bin/bash -xe
               env
+			  export SOURCING="${CMOCKA_EXTENSIONS_URI}"
               ./ci/build.sh --ci Debug
               '''
             }
@@ -88,6 +93,7 @@ pipeline {
             gitlabCommitStatus("build release") {
               sh '''#!/bin/bash -xe
               env
+			  export SOURCING="${CMOCKA_EXTENSIONS_URI}"
                 ./ci/build.sh --ci Release
               '''
             }
