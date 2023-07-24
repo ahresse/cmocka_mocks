@@ -4,7 +4,7 @@ import hudson.*
 import hudson.model.*
 
 def ASMCOV_URI
-def GITLAB_USER
+def SOURCES_URI
 
 node {
     ASMCOV_URI = ''
@@ -23,23 +23,24 @@ node {
       }
     }
 }
+
 node {
-  GITLAB_USER = ''
-  script {
-    def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
-      com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl.class,
-      Jenkins.instance,
-      null,
-      null
-    );
-    def gitlab_user = creds.findResult { it.id ==  'gitlab-jenkins-user-password'? it : null }
-    if(gitlab_user) {
-      println(gitlab_user.id + ": " +gitlab_user.username + ": " + gitlab_user.password)
-      GITLAB_USER = gitlab_user.username + ":" + gitlab_user.password
-    } else {
-      println("No Gitlab-Jenkins-User found!!!!!")
+    SOURCES_URI = ''
+
+    script {
+      def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
+        com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl.class,
+        Jenkins.instance,
+        null,
+        null
+      );
+      def baseos_gitlab_uri = creds.findResult { it.id == 'baseos_gitlab_uri' ? it : null }
+      if(baseos_gitlab_uri) {
+        println(baseos_gitlab_uri.id + ": " +baseos_gitlab_uri.username + ": " + baseos_gitlab_uri.password)
+        SOURCES_URI=baseos_gitlab_uri.password
+	println("Sources URI is " + SOURCES_URI)
+      }
     }
-  }
 }
 
 properties([gitLabConnection('GitLab')])
@@ -50,10 +51,6 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: env.BRANCH_NAME == "master"? "1000": env.BRANCH_NAME == "integration"?"1000":"3"))
   }
 
-  parameters {
-    string(name: 'CMOCKA_EXTENSIONS_URI', defaultValue: 'https://github.com/Elektrobit/cmocka_mocks', description: 'Source URI to clone cmocka_extensions project')
-  }
-
   agent {
     dockerfile {
         filename './ci/Dockerfile'
@@ -61,7 +58,7 @@ pipeline {
         additionalBuildArgs "--build-arg USER=jenkins \
                         --build-arg UID=\$(id -u) --build-arg GID=\$(id -g) \
                         --build-arg ASMCOV_URI=${ASMCOV_URI}"
-        args "--privileged --userns=keep-id -e GITLAB_USER=${GITLAB_USER}"
+        args "--privileged --userns=keep-id -e SOURCES_URI=${SOURCES_URI}"
         label "podman"
     }
   }
@@ -84,7 +81,7 @@ pipeline {
             gitlabCommitStatus("build debug") {
               sh '''#!/bin/bash -xe
               env
-			  export SOURCES_URI="${CMOCKA_EXTENSIONS_URI}"
+			  export SOURCES_URI="${SOURCES_URI}"
               ./ci/build.sh --ci Debug
               '''
             }
@@ -93,7 +90,7 @@ pipeline {
             gitlabCommitStatus("build release") {
               sh '''#!/bin/bash -xe
               env
-			  export SOURCES_URI="${CMOCKA_EXTENSIONS_URI}"
+			  export SOURCES_URI="${SOURCES_URI}"
                 ./ci/build.sh --ci Release
               '''
             }
