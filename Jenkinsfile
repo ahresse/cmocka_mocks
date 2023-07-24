@@ -84,7 +84,7 @@ pipeline {
             gitlabCommitStatus("build debug") {
               sh '''#!/bin/bash -xe
               env
-			  export SOURCING="${CMOCKA_EXTENSIONS_URI}"
+			  export SOURCES_URI="${CMOCKA_EXTENSIONS_URI}"
               ./ci/build.sh --ci Debug
               '''
             }
@@ -93,7 +93,7 @@ pipeline {
             gitlabCommitStatus("build release") {
               sh '''#!/bin/bash -xe
               env
-			  export SOURCING="${CMOCKA_EXTENSIONS_URI}"
+			  export SOURCES_URI="${CMOCKA_EXTENSIONS_URI}"
                 ./ci/build.sh --ci Release
               '''
             }
