@@ -8,7 +8,7 @@ project(cmocka_mocks LANGUAGES C VERSION ${CMOCKA_MOCKS_VERSION})
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/build/${CMAKE_BUILD_TYPE}/dist/usr/local/lib/cmake")
 
 if(DEFINED SOURCING)
-  fetchLibrary(cmocka-extensions ${SOURCING}/cmocka-extensions.git  "de3a275dbf8b70b9eeeff21df16d77989f1fa403")
+  fetchLibrary(cmocka-extensions ${SOURCING}/cmocka-extensions.git  "integration")
 
 endif(DEFINED SOURCING)
 
