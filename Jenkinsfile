@@ -115,7 +115,7 @@ pipeline {
       }
     }
 
-    stage('Build documentation') {
+/*    stage('Build documentation') {
       steps{
         gitlabCommitStatus("documentation") {
           sh './ci/build_doc.sh'
@@ -126,7 +126,7 @@ pipeline {
           archiveArtifacts artifacts: "build/Debug/doc/**, documentation/monitor.md", fingerprint: true
         }
       }
-    }
+    }*/
   }
 
   post {
