@@ -92,7 +92,7 @@ function(project_add_documentation_target)
   find_program(PLANTUML NAMES plantuml)
   find_program(PANDOC NAMES pandoc)
   add_custom_target(
-    doc
+    cmocka_mocks_doc
     mkdir -p ${CMAKE_BINARY_DIR}/doc/images &&
     ${PLANTUML} ${CMAKE_SOURCE_DIR}/documentation/images/*.plantuml &&
     ${PANDOC} -s --from gfm --to html --filter pandoc-plantuml -o ${CMAKE_BINARY_DIR}/doc/${PROJECT_NAME}_doc.html --css style.css ${PARAM_MARKDOWN} --metadata title='${PARAM_TITLE}' &&

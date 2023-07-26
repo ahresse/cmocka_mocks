@@ -16,6 +16,6 @@ export cmocka_mocks_DIR="$LOCAL_INSTALL_DIR/usr/local/lib/cmake/cmocka_mocks/"
 export cmocka_extensions_DIR="$LOCAL_INSTALL_DIR/usr/local/lib/cmake/cmocka_extensions"
 
 cmake -B "$CMAKE_BUILD_DIR" "$BASE_DIR" -DCMAKE_BUILD_TYPE=$BUILD_TYPE -G Ninja
-ninja -v -C "$CMAKE_BUILD_DIR" -j$(nproc) doc
+ninja -v -C "$CMAKE_BUILD_DIR" -j$(nproc) cmocka_mocks_doc
 
 mv "$CMAKE_BUILD_DIR/doc" "$BUILD_DIR"
