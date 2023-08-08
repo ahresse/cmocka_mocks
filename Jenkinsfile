@@ -81,7 +81,6 @@ pipeline {
             gitlabCommitStatus("build debug") {
               sh '''#!/bin/bash -xe
               env
-			  export SOURCES_URI="${SOURCES_URI}"
               ./ci/build.sh --ci Debug
               '''
             }
