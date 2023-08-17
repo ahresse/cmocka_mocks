@@ -49,4 +49,5 @@ function(configureLibrary LIBRARY_NAME LIBRARY_REPOSITORY LIBRARY_TAG)
   )
 
   message("Done building")
+  find_package(${LIBRARY_NAME} QUIET)
 endfunction()
