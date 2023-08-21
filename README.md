@@ -8,14 +8,23 @@ for testing purposes.
 cmocka_mocks uses CMake for building:
 
 ```bash
-cmake -B ./build ./cmocka_mocks
-make -C ./build all
-make -C ./build install
+export BUILD_TYPE=<Debug|Release>
+cmake -B ./build/${BUILD_TYPE}/cmake \
+        -D INSTALL_DIR=build/${BUILD_TYPE}/dist \
+        -D CMAKE_BUILD_TYPE=${BUILD_TYPE} \
+	-D CMOCKA_EXTENSIONS_URI=https://github.com/emlix/cmocka_extensions.git \
+	-D CMOCKA_EXTENSIONS_REF=integration
+make -C ./build/${BUILD_TYPE}/cmake all
+make -C ./build/${BUILD_TYPE}/cmake install
 ```
+
+It is also possible to configure cmake without the -D flags, if cmocka_extensions
+are already installed on the system.
 
 or use the CI hooks
 
 ```bash
+source CONFIG.ini
 ./ci/build.sh [Release]
 ```
 
@@ -35,6 +44,26 @@ or use the CI hooks
    ```
    ln -s build/compile_commands.json
    ```
+
+
+### Building with custom cmocka_extensions
+If you want to build using a custom location or another remote repository for
+cmocka_extensions or build another tag or branch then integration,
+then the use of variables is required.
+
+If build using cmake, simply adjust the values of ```CMOCKA_EXTENSIONS_URI```
+and ```CMOCKA_EXTENSIONS_REF``` to the wanted values. URI can be a local or
+remote path.
+
+If building using the CI Hook, refer to the configuration file CONFIG.ini
+```SOURCES_URI``` configures the location of the project directory while
+```CMOCKA_EXTENSIONS_REPO_NAME``` configures the directory name that contains
+the project directory.
+
+Additionally ```CMOCKA_EXTENSIONS_REPO_PATH``` can be set, invalidating both
+previous variables. This corresponds to setting ```CMOCKA_EXTENSIONS_URI``` in
+the cmake example. In the same way setting ```CMOCKA_EXTENSIONS_REPO_REF```
+does the same as in the cmake variant.
 
 ## Folders
 

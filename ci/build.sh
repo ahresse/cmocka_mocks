@@ -6,6 +6,11 @@ BASE_DIR=${CMD_PATH%/*}
 CMAKE_PARAM=${CMAKE_PARAM:-""}
 NINJA_PARAM=${NINJA_PARAM:-"-j$(nproc)"}
 DEPENDENCY_DIR="$BASE_DIR/build/dependency"
+SOURCES_URI=${SOURCES_URI:-https://github.com/emlix/}
+
+CMOCKA_EXTENSIONS_REPO_NAME=${CMOCKA_EXTENSIONS_REPO_NAME:-cmocka-extensions.git}
+CMOCKA_EXTENSIONS_REPO_PATH=${CMOCKA_EXTENSIONS_REPO_PATH:-${SOURCES_URI}/${CMOCKA_EXTENSIONS_REPO_NAME}}
+CMOCKA_EXTENSIONS_REPO_REF=${CMOCKA_EXTENSIONS_REPO_REF:-integration}
 
 PARAM=""
 OPTION_CI=0
@@ -45,11 +50,16 @@ if [ $OPTION_PACKAGE -eq 1 ]; then
     OPTION_CLEAN=1
 fi
 
+
+CMAKE_PARAM="${CMAKE_PARAM} -D CMOCKA_EXTENSIONS_URI=${CMOCKA_EXTENSIONS_REPO_PATH}\
+			    -D CMOCKA_EXTENSIONS_REF=${CMOCKA_EXTENSIONS_REPO_REF}"
+
 BUILD_DIR="$BASE_DIR/build/$BUILD_TYPE"
 RESULT_DIR="$BUILD_DIR/result"
 DIST_DIR="$BUILD_DIR/dist"
 CMAKE_BUILD_DIR="$BUILD_DIR/cmake"
 export LOCAL_INSTALL_DIR=${LOCAL_INSTALL_DIR:-"$DIST_DIR"}
+CMAKE_PARAM="${CMAKE_PARAM} -D INSTALL_DIR=${LOCAL_INSTALL_DIR}"
 
 DEP_BUILD_PARAM=""
 if [ $OPTION_CLEAN -eq 1 ]; then
@@ -64,43 +74,14 @@ if [ $OPTION_VERBOSE -eq 1 ]; then
     NINJA_PARAM="$NINJA_PARAM -v"
 fi
 
-if [[ -n ${CI+x} ]]; then
-    echo "Gitlab User: ${GITLAB_USER}"
-    DEPENDENCIES="cmocka_extensions;https://$GITLAB_USER@gitlabintern.emlix.com/elektrobit/base-os/cmocka-extensions.git"
-else
-    DEPENDENCIES="cmocka_extensions;git@gitlabintern.emlix.com:elektrobit/base-os/cmocka-extensions.git"
-fi
-if [[ -n $DEPENDENCIES ]] && [ ! -d "$DEPENDENCY_DIR" ]; then
-    mkdir -p "$DEPENDENCY_DIR"
-fi
-if [[ -n "$DEPENDENCIES" ]]; then
-    echo "getting dependencies..."
-fi
-for dep in $DEPENDENCIES; do
-    echo "-> ${dep}"
-    repo=${dep#*;}
-    repo_dir=$(basename "${repo%.git}")
-    dependency=$(basename "${dep%;*}")
-    if [ -d "$DEPENDENCY_DIR/${repo_dir}" ]; then
-        echo "${dependency} already cheacked out!"
-        echo "git -C $DEPENDENCY_DIR/${repo_dir} pull"
-        git -C "$DEPENDENCY_DIR/${repo_dir}" fetch --all
-        git -C "$DEPENDENCY_DIR/${repo_dir}" reset --hard origin/integration
-    else
-        echo "checking out ${dependency}!"
-        echo "git -C $DEPENDENCY_DIR clone ${repo}"
-        git -C "$DEPENDENCY_DIR" clone "${repo}"
-    fi
-    declare -x ${dependency}_DIR="$LOCAL_INSTALL_DIR/usr/local/lib/cmake/${dependency}"
-    "$DEPENDENCY_DIR/${repo_dir}/ci/build.sh" $BUILD_TYPE $DEP_BUILD_PARAM
-done
-
-echo -e "\n#### Building $(basename "$BASE_DIR") ($BUILD_TYPE) ####"
+echo -e "\n#### Configuring cmocka_mocks ($BUILD_TYPE) ####"
 mkdir -p "$RESULT_DIR" "$DIST_DIR"
 if [ ! -e "$CMAKE_BUILD_DIR/build.ninja" ]; then
     cmake -B "$CMAKE_BUILD_DIR" "$BASE_DIR" -DCMAKE_BUILD_TYPE=$BUILD_TYPE -G Ninja $CMAKE_PARAM
+
 fi
 
+echo -e "\n#### Building cmocka_mocks ($BUILD_TYPE) ####"
 DESTDIR="$LOCAL_INSTALL_DIR" \
 ninja -C "$CMAKE_BUILD_DIR" $NINJA_PARAM all install 2>&1 | tee "$RESULT_DIR/build_log.txt"
 
