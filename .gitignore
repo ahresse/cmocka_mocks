@@ -4,3 +4,5 @@
 .settings
 .asciidoctorconfig.adoc
 build
+ci/sshconfig
+compile_commands.json
