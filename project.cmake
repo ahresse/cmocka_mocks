@@ -1,1 +1,0 @@
-../shared/cmake/project.cmake
