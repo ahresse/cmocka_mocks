@@ -164,9 +164,6 @@ pipeline {
         updateGitlabCommitStatus name: 'cmocka-mocks', state: 'failed'
     }
     always {
-      withCredentials([usernamePassword(credentialsId: 'kpi_creds', passwordVariable: 'KPI_API_TOKEN', usernameVariable: 'KPI_API_URL')]) {
-        sh './ci/publish_kpis.sh'
-      }
       cleanWs(cleanWhenNotBuilt: false,
           deleteDirs: true,
           disableDeferredWipeout: true,
