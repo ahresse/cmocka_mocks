@@ -58,6 +58,8 @@ target_link_options(
     -Wl,--wrap=clock_gettime
     -Wl,--wrap=inet_aton
     -Wl,--wrap=inet_pton
+    -Wl,--wrap=getaddrinfo
+    -Wl,--wrap=freeaddrinfo
     -Wl,--wrap=socket
     -Wl,--wrap=setsockopt
     -Wl,--wrap=accept
@@ -84,6 +86,9 @@ target_link_options(
     -Wl,--wrap=sem_post
     -Wl,--wrap=sem_destroy
     -Wl,--wrap=sem_timedwait
+    -Wl,--wrap=eventfd
+    -Wl,--wrap=eventfd_read
+    -Wl,--wrap=eventfd_write
 )
 
 target_link_libraries(

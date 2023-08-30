@@ -17,6 +17,7 @@
 #include <cmocka_extensions/mock_extensions.h>
 #include <cmocka_extensions/mock_func_wrap.h>
 #include <dirent.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <pthread.h>
 #include <regex.h>
@@ -26,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/eventfd.h>
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -37,16 +39,12 @@ int MOCK_FUNC_WRAP(regcomp)(regex_t *preg, const char *regex, int cflags);
 int MOCK_FUNC_REAL(regcomp)(regex_t *preg, const char *regex, int cflags);
 
 MOCK_FUNC_VAR_EXTERN(regerror);
-size_t MOCK_FUNC_WRAP(regerror)(int errcode, const regex_t *preg, char *errbuf,
-                                size_t errbuf_size);
-size_t MOCK_FUNC_REAL(regerror)(int errcode, const regex_t *preg, char *errbuf,
-                                size_t errbuf_size);
+size_t MOCK_FUNC_WRAP(regerror)(int errcode, const regex_t *preg, char *errbuf, size_t errbuf_size);
+size_t MOCK_FUNC_REAL(regerror)(int errcode, const regex_t *preg, char *errbuf, size_t errbuf_size);
 
 MOCK_FUNC_VAR_EXTERN(regexec);
-int MOCK_FUNC_WRAP(regexec)(const regex_t *preg, const char *string,
-                            size_t nmatch, regmatch_t pmatch[], int eflags);
-int MOCK_FUNC_REAL(regexec)(const regex_t *preg, const char *string,
-                            size_t nmatch, regmatch_t pmatch[], int eflags);
+int MOCK_FUNC_WRAP(regexec)(const regex_t *preg, const char *string, size_t nmatch, regmatch_t pmatch[], int eflags);
+int MOCK_FUNC_REAL(regexec)(const regex_t *preg, const char *string, size_t nmatch, regmatch_t pmatch[], int eflags);
 
 MOCK_FUNC_VAR_EXTERN(malloc);
 void *MOCK_FUNC_WRAP(malloc)(size_t size);
@@ -93,26 +91,18 @@ int MOCK_FUNC_WRAP(fclose)(FILE *stream);
 int MOCK_FUNC_REAL(fclose)(FILE *stream);
 
 MOCK_FUNC_VAR_EXTERN(fwrite);
-size_t MOCK_FUNC_WRAP(fwrite)(const void *ptr, size_t size, size_t count,
-                              FILE *stream);
-size_t MOCK_FUNC_REAL(fwrite)(const void *ptr, size_t size, size_t count,
-                              FILE *stream);
+size_t MOCK_FUNC_WRAP(fwrite)(const void *ptr, size_t size, size_t count, FILE *stream);
+size_t MOCK_FUNC_REAL(fwrite)(const void *ptr, size_t size, size_t count, FILE *stream);
 
 MOCK_FUNC_VAR_EXTERN(fread);
-size_t MOCK_FUNC_WRAP(fread)(void *ptr, size_t size, size_t count,
-                             FILE *stream);
-size_t MOCK_FUNC_REAL(fread)(void *ptr, size_t size, size_t count,
-                             FILE *stream);
+size_t MOCK_FUNC_WRAP(fread)(void *ptr, size_t size, size_t count, FILE *stream);
+size_t MOCK_FUNC_REAL(fread)(void *ptr, size_t size, size_t count, FILE *stream);
 
 MOCK_FUNC_VAR_EXTERN(scandir);
-int MOCK_FUNC_WRAP(scandir)(const char *dirp, struct dirent ***namelist,
-                            int (*filter)(const struct dirent *),
-                            int (*compar)(const struct dirent **,
-                                          const struct dirent **));
-int MOCK_FUNC_REAL(scandir)(const char *dirp, struct dirent ***namelist,
-                            int (*filter)(const struct dirent *),
-                            int (*compar)(const struct dirent **,
-                                          const struct dirent **));
+int MOCK_FUNC_WRAP(scandir)(const char *dirp, struct dirent ***namelist, int (*filter)(const struct dirent *),
+                            int (*compar)(const struct dirent **, const struct dirent **));
+int MOCK_FUNC_REAL(scandir)(const char *dirp, struct dirent ***namelist, int (*filter)(const struct dirent *),
+                            int (*compar)(const struct dirent **, const struct dirent **));
 
 MOCK_FUNC_VAR_EXTERN(fseek);
 int MOCK_FUNC_WRAP(fseek)(FILE *stream, long int offset, int origin);
@@ -186,15 +176,23 @@ MOCK_FUNC_VAR_EXTERN(inet_pton);
 int MOCK_FUNC_WRAP(inet_pton)(int af, const char *cp, void *buf);
 int MOCK_FUNC_REAL(inet_pton)(int af, const char *cp, void *buf);
 
+MOCK_FUNC_VAR_EXTERN(getaddrinfo);
+int MOCK_FUNC_WRAP(getaddrinfo)(const char *node, const char *service, const struct addrinfo *hints,
+                                struct addrinfo **res);
+int MOCK_FUNC_REAL(getaddrinfo)(const char *node, const char *service, const struct addrinfo *hints,
+                                struct addrinfo **res);
+
+MOCK_FUNC_VAR_EXTERN(freeaddrinfo);
+void MOCK_FUNC_WRAP(freeaddrinfo)(struct addrinfo *res);
+void MOCK_FUNC_REAL(freeaddrinfo)(struct addrinfo *res);
+
 MOCK_FUNC_VAR_EXTERN(socket);
 int MOCK_FUNC_WRAP(socket)(int domain, int type, int protocol);
 int MOCK_FUNC_REAL(socket)(int domain, int type, int protocol);
 
 MOCK_FUNC_VAR_EXTERN(setsockopt);
-int MOCK_FUNC_WRAP(setsockopt)(int fd, int level, int optname,
-                               const void *optval, socklen_t optlen);
-int MOCK_FUNC_REAL(setsockopt)(int fd, int level, int optname,
-                               const void *optval, socklen_t optlen);
+int MOCK_FUNC_WRAP(setsockopt)(int fd, int level, int optname, const void *optval, socklen_t optlen);
+int MOCK_FUNC_REAL(setsockopt)(int fd, int level, int optname, const void *optval, socklen_t optlen);
 
 MOCK_FUNC_VAR_EXTERN(accept);
 extern int MOCK_FUNC_WRAP(accept_errno);
@@ -223,31 +221,28 @@ int MOCK_FUNC_REAL(open)(char *file, int flags, mode_t mode);
 
 MOCK_FUNC_VAR_EXTERN(pselect);
 extern int MOCK_FUNC_WRAP(pselect_errno);
-int MOCK_FUNC_WRAP(pselect)(int nfds, fd_set *readfds, fd_set *writefds,
-                            fd_set *exceptfds, const struct timespec *timeout,
-                            const __sigset_t *sigmask);
-int MOCK_FUNC_REAL(pselect)(int nfds, fd_set *readfds, fd_set *writefds,
-                            fd_set *exceptfds, const struct timespec *timeout,
-                            const __sigset_t *sigmask);
+int MOCK_FUNC_WRAP(pselect)(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+                            const struct timespec *timeout, const __sigset_t *sigmask);
+int MOCK_FUNC_REAL(pselect)(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+                            const struct timespec *timeout, const __sigset_t *sigmask);
 
 MOCK_FUNC_PROTOTYPE(raise, int, int __sig)
-MOCK_FUNC_PROTOTYPE(pthread_create, int, pthread_t *__newthread,
-                    const pthread_attr_t *__attr,
+MOCK_FUNC_PROTOTYPE(pthread_create, int, pthread_t *__newthread, const pthread_attr_t *__attr,
                     void *(*__start_routine)(void *), void *__arg)
 MOCK_FUNC_PROTOTYPE(pthread_join, int, pthread_t __th, void **__thread_return)
-MOCK_FUNC_PROTOTYPE(pthread_mutex_init, int, pthread_mutex_t *__mutex,
-                    const pthread_mutexattr_t *__mutexattr)
+MOCK_FUNC_PROTOTYPE(pthread_mutex_init, int, pthread_mutex_t *__mutex, const pthread_mutexattr_t *__mutexattr)
 MOCK_FUNC_PROTOTYPE(pthread_mutex_destroy, int, pthread_mutex_t *__mutex)
 MOCK_FUNC_PROTOTYPE(pthread_mutex_trylock, int, pthread_mutex_t *__mutex)
 MOCK_FUNC_PROTOTYPE(pthread_mutex_lock, int, pthread_mutex_t *__mutex)
 MOCK_FUNC_PROTOTYPE(pthread_mutex_unlock, int, pthread_mutex_t *__mutex)
-MOCK_FUNC_PROTOTYPE(pthread_mutex_timedlock, int, pthread_mutex_t *__mutex,
-                    const struct timespec *__abstime)
-MOCK_FUNC_PROTOTYPE(sem_init, int, sem_t *__sem, int __pshared,
-                    unsigned int __value)
+MOCK_FUNC_PROTOTYPE(pthread_mutex_timedlock, int, pthread_mutex_t *__mutex, const struct timespec *__abstime)
+MOCK_FUNC_PROTOTYPE(sem_init, int, sem_t *__sem, int __pshared, unsigned int __value)
 MOCK_FUNC_PROTOTYPE(sem_post, int, sem_t *__sem)
 MOCK_FUNC_PROTOTYPE(sem_destroy, int, sem_t *__sem)
-MOCK_FUNC_PROTOTYPE(sem_timedwait, int, sem_t *__sem,
-                    const struct timespec *__abstime)
+MOCK_FUNC_PROTOTYPE(sem_timedwait, int, sem_t *__sem, const struct timespec *__abstime)
+
+MOCK_FUNC_PROTOTYPE(eventfd, int, unsigned int __count, int __flags)
+MOCK_FUNC_PROTOTYPE(eventfd_read, int, int __fd, eventfd_t *__value)
+MOCK_FUNC_PROTOTYPE(eventfd_write, int, int __fd, eventfd_t __value)
 
 #endif
