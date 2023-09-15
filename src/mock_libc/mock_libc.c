@@ -2,6 +2,7 @@
 
 #include "cmocka_mocks/mock_libc.h"
 
+#include <cmocka.h>
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
@@ -508,14 +509,35 @@ int MOCK_FUNC_WRAP(raise)(int __sig) {
 MOCK_FUNC_VAR_NEW(pthread_create);
 int MOCK_FUNC_WRAP(pthread_create)(pthread_t *__newthread, const pthread_attr_t *__attr,
                                    void *(*__start_routine)(void *), void *__arg) {
-    if (MOCK_IS_ACTIVE(pthread_create)) {
-        check_expected_ptr(__newthread);
-        check_expected_ptr(__attr);
-        check_expected_ptr(__start_routine);
-        check_expected_ptr(__arg);
+    int result;
+
+    switch (MOCK_GET_TYPE(pthread_create)) {
+        case CMOCKA_MOCK_ENABLED_WITH_FUNC:
+            result = MOCK_FUNC_WITH(pthread_create)(__newthread, __attr, __start_routine, __arg);
+            break;
+        case CMOCKA_MOCK_ENABLED:
+            check_expected_ptr(__newthread);
+            check_expected_ptr(__attr);
+            check_expected_ptr(__start_routine);
+            check_expected_ptr(__arg);
+            result = mock_type(int);
+            break;
+        default:
+            result = MOCK_FUNC_REAL(pthread_create)(__newthread, __attr, __start_routine, __arg);
+            break;
+    }
+
+    return result;
+}
+
+MOCK_FUNC_VAR_NEW(pthread_once);
+int MOCK_FUNC_WRAP(pthread_once)(pthread_once_t *__once_control, void (*__init_routine)(void)) {
+    if (MOCK_IS_ACTIVE(pthread_once)) {
+        check_expected_ptr(__once_control);
+        check_expected_ptr(__init_routine);
         return mock_type(int);
     }
-    return MOCK_FUNC_REAL(pthread_create)(__newthread, __attr, __start_routine, __arg);
+    return MOCK_FUNC_REAL(pthread_once)(__once_control, __init_routine);
 }
 
 MOCK_FUNC_VAR_NEW(pthread_join);
