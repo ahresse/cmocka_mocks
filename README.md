@@ -13,7 +13,7 @@ export BUILD_TYPE=<Debug|Release>
 cmake -B ./build/${BUILD_TYPE}/cmake \
         -D INSTALL_DIR=build/${BUILD_TYPE}/dist \
         -D CMAKE_BUILD_TYPE=${BUILD_TYPE} \
-	-D CMOCKA_EXTENSIONS_URI=https://github.com/emlix/cmocka_extensions.git \
+        -D CMOCKA_EXTENSIONS_URI=https://github.com/Elektrobit/cmocka_extensions.git \
 	-D CMOCKA_EXTENSIONS_REF=integration
 make -C ./build/${BUILD_TYPE}/cmake all
 make -C ./build/${BUILD_TYPE}/cmake install
