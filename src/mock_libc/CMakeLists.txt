@@ -83,6 +83,7 @@ target_link_options(
     -Wl,--wrap=pthread_mutex_lock
     -Wl,--wrap=pthread_mutex_unlock
     -Wl,--wrap=pthread_mutex_timedlock
+    -Wl,--wrap=pthread_setname_np
     -Wl,--wrap=sem_init
     -Wl,--wrap=sem_post
     -Wl,--wrap=sem_destroy
