@@ -606,6 +606,16 @@ int MOCK_FUNC_WRAP(pthread_mutex_timedlock)(pthread_mutex_t *__mutex, const stru
     return MOCK_FUNC_REAL(pthread_mutex_timedlock)(__mutex, __abstime);
 }
 
+MOCK_FUNC_VAR_NEW(pthread_setname_np);
+int MOCK_FUNC_WRAP(pthread_setname_np)(pthread_t thread, const char *name) {
+    if (MOCK_IS_ACTIVE(pthread_setname_np)) {
+        check_expected(thread);
+        check_expected_ptr(name);
+        return mock_type(int);
+    }
+    return MOCK_FUNC_REAL(pthread_setname_np)(thread, name);
+}
+
 MOCK_FUNC_VAR_NEW(sem_init);
 int MOCK_FUNC_WRAP(sem_init)(sem_t *__sem, int __pshared, unsigned int __value) {
     if (MOCK_IS_ACTIVE(sem_init)) {
