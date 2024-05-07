@@ -1,0 +1,8 @@
+/*.substvars
+/files
+/debhelper-build-stamp
+/libcmocka-mocks0/
+/libcmocka-mocks-dev/
+/cmocka-mocks-doc/
+/.debhelper/
+/tmp/

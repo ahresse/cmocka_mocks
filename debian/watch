@@ -1,0 +1,2 @@
+version=4
+https://github.com/Elektrobit/cmocka_mocks/tags .*/cmocka_mocks-(\d+).(\d+).(\d+).tar.gz

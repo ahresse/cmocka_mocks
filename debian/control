@@ -1,0 +1,53 @@
+Source: cmocka-mocks
+Section: admin
+Priority: optional
+Maintainer: Isaac True <isaac.true@emlix.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake,
+ git,
+ libcmocka-dev,
+ cmocka-extensions-dev,
+ libmnl-dev,
+ libjson-c-dev,
+ pkg-config,
+ libssl-dev,
+Rules-Requires-Root: no
+Standards-Version: 4.6.2
+Homepage: https://github.com/Elektrobit/cmocka_mocks
+Vcs-Browser: https://github.com/Elektrobit/cmocka_mocks
+Vcs-Git: https://github.com/Elektrobit/cmocka_mocks
+
+Package: libcmocka-mocks0
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+Description: Library to mock common C functions for testing purposes
+ Library to mock common C functions, like libc and jsonc, for testing purposes.
+ This collection of ready to use mocks is based on cmocka_extensions.
+
+Package: libcmocka-mocks-dev
+Architecture: any
+Depends:
+ ${misc:Depends},
+ libcmocka-mocks0 (= ${binary:Version}),
+ cmocka-extensions-dev,
+ libmnl-dev,
+ libjson-c-dev,
+ libssl-dev,
+Description: Library to mock common C functions for testing purposes
+ Library to mock common C functions, like libc and jsonc, for testing purposes.
+ This collection of ready to use mocks is based on cmocka_extensions.
+ .
+ Development package.
+
+Package: cmocka-mocks-doc
+Architecture: all
+Depends:
+ ${misc:Depends},
+Description: Documentation for cmocka-mocks
+ Library to mock common C functions, like libc and jsonc, for testing purposes.
+ This collection of ready to use mocks is based on cmocka_extensions.
+ .
+ Documentation package.
