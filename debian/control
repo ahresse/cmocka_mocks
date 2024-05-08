@@ -12,6 +12,9 @@ Build-Depends:
  libjson-c-dev,
  pkg-config,
  libssl-dev,
+ pandoc,
+ pandoc-plantuml-filter,
+ graphviz,
 Rules-Requires-Root: no
 Standards-Version: 4.6.2
 Homepage: https://github.com/Elektrobit/cmocka_mocks
