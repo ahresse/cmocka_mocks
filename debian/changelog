@@ -1,3 +1,10 @@
+cmocka-mocks (0.51.0-8) unstable; urgency=medium
+
+  * Split libmock_* files into their own packages.
+  * Removed libcmocka-mocks0-test package.
+
+ -- Isaac True <isaac.true@emlix.com>  Wed, 08 May 2024 14:54:01 +0200
+
 cmocka-mocks (0.51.0-7) unstable; urgency=medium
 
   * Rename libcmocka-mocks0 package to libcmocka-mocks0-test, as it only
