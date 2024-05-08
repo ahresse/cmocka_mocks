@@ -8,8 +8,13 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 override_dh_auto_build:
 	dh_auto_build -- all cmocka_mocks_doc
 
-# Do not compress .md files
+override_dh_install:
+	dh_install
+	# Do not ship plantuml source files
+	find debian/ -name \*.plantuml -delete
+
 override_dh_compress:
+	# Do not compress .md files
 	dh_compress --exclude=.md
 
 override_dh_clean:

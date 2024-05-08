@@ -1,3 +1,9 @@
+cmocka-mocks (0.51.0-9) unstable; urgency=medium
+
+  * Do not ship plantuml source files.
+
+ -- Isaac True <isaac.true@emlix.com>  Wed, 08 May 2024 15:01:46 +0200
+
 cmocka-mocks (0.51.0-8) unstable; urgency=medium
 
   * Split libmock_* files into their own packages.
