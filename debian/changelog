@@ -1,3 +1,10 @@
+cmocka-mocks (0.51.0-7) unstable; urgency=medium
+
+  * Rename libcmocka-mocks0 package to libcmocka-mocks0-test, as it only
+    contains files for unit tests and no runtime libraries.
+
+ -- Isaac True <isaac.true@emlix.com>  Wed, 08 May 2024 14:42:57 +0200
+
 cmocka-mocks (0.51.0-6) unstable; urgency=medium
 
   * Additionally build documentation.

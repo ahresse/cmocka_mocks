@@ -21,20 +21,22 @@ Homepage: https://github.com/Elektrobit/cmocka_mocks
 Vcs-Browser: https://github.com/Elektrobit/cmocka_mocks
 Vcs-Git: https://github.com/Elektrobit/cmocka_mocks
 
-Package: libcmocka-mocks0
+Package: libcmocka-mocks0-test
 Architecture: any
 Depends:
  ${misc:Depends},
  ${shlibs:Depends},
-Description: Library to mock common C functions for testing purposes
+Description: Library to mock common C functions for testing purposes - unit tests
  Library to mock common C functions, like libc and jsonc, for testing purposes.
  This collection of ready to use mocks is based on cmocka_extensions.
+ .
+ Unit test libraries.
 
 Package: libcmocka-mocks-dev
 Architecture: any
 Depends:
  ${misc:Depends},
- libcmocka-mocks0 (= ${binary:Version}),
+ libcmocka-mocks0-test (= ${binary:Version}),
  cmocka-extensions-dev,
  libmnl-dev,
  libjson-c-dev,
