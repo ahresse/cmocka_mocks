@@ -5,6 +5,7 @@ cmocka-mocks (0.51.0-6) unstable; urgency=medium
      -  pandoc
      -  pandoc-plantuml-filter
      -  graphviz
+  * Do not compress markdown files.
 
  -- Isaac True <isaac.true@emlix.com>  Wed, 08 May 2024 12:22:54 +0200
 
