@@ -3,6 +3,7 @@ cmocka-mocks (0.51.0-10) unstable; urgency=medium
   * Set Standards-Version to 4.6.0.1.
   * Add cmocka-mocks-doc.lintian-overrides.
   * Add libmock-libmnl0.lintian-overrides.
+  * Add libmock-openssl0.lintian-overrides.
 
  -- Isaac True <isaac.true@emlix.com>  Mon, 13 May 2024 16:30:28 +0200
 
