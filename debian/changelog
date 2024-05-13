@@ -1,8 +1,9 @@
 cmocka-mocks (0.51.0-10) unstable; urgency=medium
 
   * Set Standards-Version to 4.6.0.1.
+  * Add cmocka-mocks-doc.lintian-overrides.
 
- -- Isaac True <isaac.true@emlix.com>  Mon, 13 May 2024 16:31:58 +0200
+ -- Isaac True <isaac.true@emlix.com>  Mon, 13 May 2024 16:30:28 +0200
 
 cmocka-mocks (0.51.0-9) unstable; urgency=medium
 
