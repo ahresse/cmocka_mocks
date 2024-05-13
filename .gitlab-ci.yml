@@ -1,0 +1,9 @@
+---
+build-deb-packages:
+  stage: build
+  image: ubuntu:jammy
+  script:
+    - ci/build_debs.sh
+  artifacts:
+    paths:
+      - ./*.deb
