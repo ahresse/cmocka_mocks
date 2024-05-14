@@ -1,4 +1,28 @@
 ---
+variables:
+  DOCKER_HOST: "tcp://docker:2375"
+
+stages:
+  - build
+  - test
+
+default:
+  image: ubuntu:jammy
+  services:
+    - name: docker:24-dind
+      alias: docker
+      variables:
+        DOCKER_TLS_CERTDIR: ""
+  tags:
+      - "docker"
+
+before_script:
+  - apt-get update
+  - apt-get install -y curl bash jq docker.io
+  - docker info
+  - ip a
+  - env | sort
+
 build-deb-packages:
   parallel:
     matrix:
