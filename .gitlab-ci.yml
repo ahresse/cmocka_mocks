@@ -1,9 +1,15 @@
 ---
 build-deb-packages:
+  parallel:
+    matrix:
+      - OS: ubuntu
+        CODENAME: jammy
+      - OS: ubuntu
+        CODENAME: noble
   stage: build
-  image: ubuntu:jammy
+  image: ${OS}:${CODENAME}
   script:
-    - ci/build_debs.sh
+    - ci/build_debs.sh ${CODENAME}
   artifacts:
     paths:
       - ./*.deb
