@@ -22,7 +22,7 @@ Vcs-Browser: https://github.com/Elektrobit/cmocka_mocks
 Vcs-Git: https://github.com/Elektrobit/cmocka_mocks
 
 Package: libmock-jsonc0
-Section: libdevel
+Section: libs
 Architecture: any
 Depends:
  ${misc:Depends},
