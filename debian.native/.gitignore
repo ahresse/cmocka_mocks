@@ -1,0 +1,12 @@
+/*.substvars
+/files
+/debhelper-build-stamp
+/libcmocka-mocks-dev/
+/libmock-jsonc0/
+/libmock-libc0/
+/libmock-libmnl0/
+/libmock-openssl0/
+/cmocka-mocks-doc/
+/.debhelper/
+/tmp/
+/*.debhelper.log
