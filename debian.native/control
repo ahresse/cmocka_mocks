@@ -74,6 +74,7 @@ Description: Library to mock common C functions for testing purposes
  Development package.
 
 Package: cmocka-mocks-doc
+Section: doc
 Architecture: all
 Depends:
  ${misc:Depends},
