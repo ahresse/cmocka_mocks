@@ -1,0 +1,1 @@
+library-not-linked-against-libc [usr/lib/x86_64-linux-gnu/libmock_openssl.so.0.51.0]
