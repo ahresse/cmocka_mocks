@@ -13,6 +13,7 @@ Build-Depends:
  libjson-c-dev,
  pkg-config,
  libssl-dev,
+Build-Depends-Indep:
  pandoc,
  pandoc-plantuml-filter,
  graphviz,
