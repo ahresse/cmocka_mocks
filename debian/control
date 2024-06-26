@@ -1,5 +1,5 @@
 Source: cmocka-mocks
-Section: admin
+Section: devel
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 XSBC-Original-Maintainer: Isaac True <isaac.true@emlix.com>
