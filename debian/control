@@ -11,7 +11,7 @@ Build-Depends:
  cmocka-extensions-dev,
  libmnl-dev,
  libjson-c-dev,
- pkg-config,
+ pkgconf,
  libssl-dev,
 Build-Depends-Indep:
  pandoc,
