@@ -2,5 +2,27 @@ cmocka-mocks (0.52.1-0ubuntu1~ppa1) oracular; urgency=medium
 
   * Initial release (LP: #2069875).
     Based on upstream debian.native directory
+  * debian: set cmocka-mocks section to devel.
+  * debian: set cmocka-mocks-doc section to doc.
+  * debian: set libmock-jsonc0 section to libs.
+  * debian: set libmock-libc0 section to libs.
+  * debian: set libmock-libmnl0 section to libs.
+  * debian: set libmock-openssl0 section to libs.
+  * debian: set libcmocka-mocks-dev section to libdevel.
+  * debian: update maintainer to Ubuntu Developers.
+  * debian: remove vcs fields from control file.
+    As these information won't be necessarly valid anymore if uploaded to
+    Ubuntu.
+  * debian: introduce debian/clean.
+  * debian: generating doc only for Indep.
+    This is optimizing build since doc package is specified for Architecture:all
+  * debian: fix pkgconfig package name.
+    W: cmocka-mocks source: build-depends-on-obsolete-package Build-Depends:
+    pkg-config => pkgconf
+  * debian: fix cmocka-mocks-doc.lintian-overrides.
+  * debian: fix extended-description-is-probably-too-short.
+  * debian: fix lintian-overrides lib versions.
+  * debian: fix elektrobit name in copyright file.
+
 
  -- Alexandre Esse <alexandre.esse@canonical.com>  Thu, 27 Jun 2024 16:13:27 +0200
