@@ -1,0 +1,6 @@
+{
+    "cmocka_extensions": {
+        "url": "${SOURCES_URI}/cmocka_extensions.git",
+        "branch": "integration"
+    }
+}
