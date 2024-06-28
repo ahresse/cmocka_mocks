@@ -14,8 +14,10 @@ RUN apt-get update \
     clang-tidy \
     cmake \
     curl \
+    debhelper \
     gdb \
     git \
+    git-buildpackage \
     gnuplot \
     jq \
     libcmocka-dev \
