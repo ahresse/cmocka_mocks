@@ -1,0 +1,5 @@
+{
+	"cmocka_extensions": {
+		"url": "https://github.com/Elektrobit/cmocka_extensions.git"
+	}
+}
